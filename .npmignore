@@ -1,0 +1,7 @@
+# folders
+.vscode/
+src/
+
+# files
+package-lock.json
+tsconfig.json

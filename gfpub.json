@@ -1,0 +1,9 @@
+{
+  "functionFolders": [],
+  "flags": [
+    "--region=us-east1",
+    "--runtime=nodejs20",
+    "--trigger-http",
+    "--allow-unauthenticated"
+  ]
+}

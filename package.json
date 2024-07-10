@@ -1,0 +1,39 @@
+{
+  "name": "google-functions-publish",
+  "version": "0.0.0",
+  "description": "Publishes the Google Cloud functions from multiple subdirectories.",
+  "author": "John M. Wargo",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/johnwargo/google-functions-publish.git"
+  },
+  "type": "module",
+  "main": "google-functions-publish.js",
+  "bin": {
+    "gfpub": "google-functions-publish.js"
+  },
+  "keywords": [
+    "node",
+    "Google Cloud Functions"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "start": "tsc && node google-functions-publish.js"
+  },
+  "dependencies": {
+    "boxen": "^7.1.1",
+    "chalk": "^5.3.0",
+    "cli-logger": "^0.5.40",
+    "execa": "^9.3.0",
+    "fs-extra": "^11.2.0",
+    "prompts": "^2.4.2"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^18.19.34",
+    "@types/prompts": "^2.4.9",
+    "typescript": "^5.4.5"
+  }
+}
