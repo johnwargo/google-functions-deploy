@@ -24,8 +24,6 @@ var log = logger();
 // Types
 // ====================================
 
-enum PropertyType { Array, Boolean, Number, String }
-
 type ConfigObject = {
   // https://dev.to/tlylt/exploring-key-string-any-in-typescript-4ake
   [key: string]: any;
@@ -43,10 +41,10 @@ type Choice = {
 // Constants and Variables
 // ====================================
 
-const APP_NAME = 'Publish Google Functions';
-const APP_SHORT_NAME = 'gfpub';
+const APP_NAME = 'Deploy Google Functions';
+const APP_SHORT_NAME = 'gfdeploy';
 const APP_AUTHOR = 'by John M. Wargo (https://johnwargo.com)';
-const APP_CONFIG_FILE = 'gfpub.json';
+const APP_CONFIG_FILE = APP_SHORT_NAME + 'json';
 
 // ====================================
 // Functions

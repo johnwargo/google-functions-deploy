@@ -7,17 +7,10 @@ import { execa, ExecaError } from 'execa';
 import prompts from 'prompts';
 import logger from 'cli-logger';
 var log = logger();
-var PropertyType;
-(function (PropertyType) {
-    PropertyType[PropertyType["Array"] = 0] = "Array";
-    PropertyType[PropertyType["Boolean"] = 1] = "Boolean";
-    PropertyType[PropertyType["Number"] = 2] = "Number";
-    PropertyType[PropertyType["String"] = 3] = "String";
-})(PropertyType || (PropertyType = {}));
-const APP_NAME = 'Publish Google Functions';
-const APP_SHORT_NAME = 'gfpub';
+const APP_NAME = 'Deploy Google Functions';
+const APP_SHORT_NAME = 'gfdeploy';
 const APP_AUTHOR = 'by John M. Wargo (https://johnwargo.com)';
-const APP_CONFIG_FILE = 'gfpub.json';
+const APP_CONFIG_FILE = APP_SHORT_NAME + 'json';
 function compareFunction(a, b) {
     if (a.property < b.property) {
         return -1;
@@ -51,8 +44,7 @@ function saveConfigFile(configFilePath, configObject) {
     var result = true;
     try {
         fs.writeFileSync(path.join('.', configFilePath), outputStr, 'utf8');
-        log.info('Output file written successfully');
-        log.info(`\nOpen ${chalk.yellow(configFilePath)} in an editor to modify configuration settings.`);
+        log.info('Configuration file written successfully');
     }
     catch (err) {
         log.error(`${chalk.red('Error:')} Unable to write to ${APP_CONFIG_FILE}`);
@@ -151,6 +143,9 @@ if (!fs.existsSync(configFilePath)) {
                     process.exit(1);
                 }
                 process.exit(0);
+            }
+            else {
+                log.info(`\nOpen ${chalk.yellow(configFilePath)} in an editor to configure settings for the project.`);
             }
         }
         process.exit(1);
