@@ -26,7 +26,7 @@ The module adds a `gfdeploy` command you can use in any Google Cloud Functions p
 
 ## Usage
 
-## Configuration
+### Configuration
 
 The module requires a configuration file, so on first run it will offer to create it for you. To configure the module, open a terminal window in the Google Cloud Functions project then execute the following command:
 
@@ -100,7 +100,7 @@ Here's an example of a configuration file populated with configuration informati
 
 The `gcloud functions deploy` command supports a wide selection of command-line options, refer to the [product documentation](https://cloud.google.com/sdk/gcloud/reference/functions/deploy) for information about all of the available options. Rather than code support for every command-line option, all you have to do is populate the `flags` array with the appropriate settings for your particular project and the module takes care of passing them to the `gcloud` command.
 
-## Function Deployment
+### Function Deployment
 
 With a populated configuration in place, to deploy all of the functions in a project to Google Cloud Functions, open a terminal window in the project folder and execute the following command:
 
