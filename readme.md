@@ -100,3 +100,16 @@ The `gcloud functions deploy` command supports a wide selection of command-line 
 
 ## Function Deployment
 
+With a populated configuration in place, to deploy all of the functions in a project to Google Cloud Functions, open a terminal window in the project folder and execute the following command:
+
+``` shell
+gfpub
+```
+
+The module will loop through all of the folders in the `functionsFolders` array and execute the deployment command for each while writing all output to the console. 
+
+***
+
+If this code helps you, please consider buying me a coffee.
+
+<a href="https://www.buymeacoffee.com/johnwargo" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
