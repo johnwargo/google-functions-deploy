@@ -91,6 +91,16 @@ function isFolderArrayValid(configValue, folders) {
     }
     return missingFolders.length === 0;
 }
+function getlocalFolders() {
+    let folders = fs.readdirSync(process.cwd(), { withFileTypes: true });
+    let choices = [];
+    for (const folder of folders) {
+        if (folder.isDirectory()) {
+            choices.push({ title: folder.name, value: folder.name });
+        }
+    }
+    return choices;
+}
 console.log(chalk.green(boxen(APP_NAME, { padding: 1 })));
 console.log(`${APP_AUTHOR}\n`);
 const myArgs = process.argv.slice(2);
@@ -116,10 +126,31 @@ if (!fs.existsSync(configFilePath)) {
         let configObject = buildConfigObject();
         if (debugMode)
             console.dir(configObject);
-        configObject.flags.push('--region=us-east1');
-        configObject.flags.push('--runtime=nodejs20');
-        configObject.flags.push('--trigger-http');
-        configObject.flags.push('--allow-unauthenticated');
+        const configPrompts = [
+            {
+                type: 'confirm',
+                name: 'useDefaultFlags',
+                message: chalk.green('Use default flags?'),
+                initial: true
+            },
+            {
+                type: 'multiselect',
+                name: 'folders',
+                message: 'Select one or more function folders to deploy:',
+                choices: getlocalFolders(),
+            }
+        ];
+        let fileOptions = await prompts(configPrompts);
+        if (debugMode)
+            console.dir(fileOptions);
+        configObject.functionFolders = fileOptions.folders;
+        if (fileOptions.useDefaultFlags) {
+            log.debug('Using default flags');
+            configObject.flags.push('--region=us-east1');
+            configObject.flags.push('--runtime=nodejs20');
+            configObject.flags.push('--trigger-http');
+            configObject.flags.push('--allow-unauthenticated');
+        }
         if (saveConfigFile(configFilePath, configObject)) {
             try {
                 await execa('code', [configFilePath]);
@@ -154,10 +185,10 @@ if (configObject.flags.length < 1) {
 }
 for (const func of configObject.functionFolders) {
     var flagStr = configObject.flags.join(' ');
-    var deployCmd = `functions deploy ${func} ${flagStr}`;
+    var deployCmd = `gcloud functions deploy ${func} ${flagStr}`;
     process.chdir(func);
-    var flags = deployCmd.split(" ");
-    console.log('Deploying the ' + chalk.green(func) + ' function');
-    await execa `gcloud ${flags}`;
+    log.info('Deploying the ' + chalk.green(func) + ' function');
+    log.info(`Executing: ${deployCmd}`);
+    await execa `${deployCmd}`;
     process.chdir('..');
 }

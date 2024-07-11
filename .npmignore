@@ -5,3 +5,4 @@ src/
 # files
 package-lock.json
 tsconfig.json
+gfpub.json

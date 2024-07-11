@@ -34,10 +34,10 @@ type ConfigObject = {
   flags: string[];
 }
 
-type Choice = {
-  title: string;
-  value: string;
-}
+// type Choice = {
+//   title: string;
+//   value: string;
+// }
 
 type PromptSelection = {
   title: string;
@@ -143,6 +143,18 @@ function isFolderArrayValid(configValue: string, folders: string[]): boolean {
   return missingFolders.length === 0;
 }
 
+function getlocalFolders(): PromptSelection[] {
+  let folders = fs.readdirSync(process.cwd(), { withFileTypes: true });
+  let choices = [];
+  for (const folder of folders) {
+    if (folder.isDirectory()) {
+      choices.push({ title: folder.name, value: folder.name });
+    }
+  }
+  return choices;
+}
+
+
 // ====================================
 // Processing Starts Here
 // ====================================
@@ -179,14 +191,39 @@ if (!fs.existsSync(configFilePath)) {
     let configObject: ConfigObject = buildConfigObject();
     if (debugMode) console.dir(configObject);
 
-    // TODO: Ask the user to select the folders to deploy functions from
+    const configPrompts: any[] = [
+      {
+        type: 'confirm',
+        name: 'useDefaultFlags',
+        message: chalk.green('Use default flags?'),
+        initial: true
+      },
+      {
+        type: 'multiselect',
+        name: 'folders',
+        message: 'Select one or more function folders to deploy:',
+        choices: getlocalFolders(),
+      }
+    ]
+    let fileOptions = await prompts(configPrompts);
+    if (debugMode) console.dir(fileOptions);
 
-
-    // populate some default flags (this is what I use for my functions)
-    configObject.flags.push('--region=us-east1');
-    configObject.flags.push('--runtime=nodejs20');
-    configObject.flags.push('--trigger-http');
-    configObject.flags.push('--allow-unauthenticated');
+    // if (fileOptions.folders.length < 1) {
+    //   log.error('No folders selected, exiting...');
+    //   process.exit(1);
+    // }
+    
+    // populate the config object with the user's selections
+    configObject.functionFolders = fileOptions.folders;
+    // should we populate the flags array with default values?
+    if (fileOptions.useDefaultFlags) {
+      log.debug('Using default flags');
+      // populate some default flags (this is what I use for my functions)
+      configObject.flags.push('--region=us-east1');
+      configObject.flags.push('--runtime=nodejs20');
+      configObject.flags.push('--trigger-http');
+      configObject.flags.push('--allow-unauthenticated');
+    }
 
     // write the file to disk
     if (saveConfigFile(configFilePath, configObject)) {
@@ -233,12 +270,13 @@ for (const func of configObject.functionFolders) {
   // build a flag list from the flags array
   var flagStr = configObject.flags.join(' ');
   // execute the function deploy command passing in the flags as options to the command
-  var deployCmd = `functions deploy ${func} ${flagStr}`; 
+  var deployCmd = `gcloud functions deploy ${func} ${flagStr}`;
   // change to the function directory
   process.chdir(func);
-  console.log('Deploying the ' + chalk.green(func) + ' function');
+  log.info('Deploying the ' + chalk.green(func) + ' function');
+  log.info(`Executing: ${deployCmd}`);
   // deploy the function
-  await execa `gcloud ${deployCmd}`;
+  await execa`${deployCmd}`;
   // change back to the project directory
   process.chdir('..');
 }
