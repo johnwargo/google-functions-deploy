@@ -110,7 +110,7 @@ log.level(debugMode ? log.DEBUG : log.INFO);
 log.debug(chalk.green('Debug mode enabled'));
 log.debug(`Working directory: ${path.join(process.cwd(), path.sep)}`);
 const configFilePath = path.join(process.cwd(), APP_CONFIG_FILE);
-log.info(`Configuration file: ${configFilePath}`);
+log.info(`Configuration path: ${configFilePath}`);
 if (!fs.existsSync(configFilePath)) {
     log.info(chalk.red('\nConfiguration file missing: '));
     log.info('Rather than requiring the use of a bunch of command-line arguments, this tool uses a configuration file instead.');
@@ -136,7 +136,7 @@ if (!fs.existsSync(configFilePath)) {
             {
                 type: 'multiselect',
                 name: 'folders',
-                message: 'Select one or more function folders to deploy:',
+                message: chalk.green('Select one or more function folders to deploy:'),
                 choices: getlocalFolders(),
             }
         ];
@@ -152,14 +152,16 @@ if (!fs.existsSync(configFilePath)) {
             configObject.flags.push('--allow-unauthenticated');
         }
         if (saveConfigFile(configFilePath, configObject)) {
-            try {
-                await execa('code', [configFilePath]);
+            if (process.env.TERM_PROGRAM == "vscode") {
+                try {
+                    await execa('code', [configFilePath]);
+                }
+                catch (err) {
+                    log.error(err);
+                    process.exit(1);
+                }
+                process.exit(0);
             }
-            catch (err) {
-                log.error(err);
-                process.exit(1);
-            }
-            process.exit(0);
         }
         process.exit(1);
     }
@@ -187,8 +189,8 @@ for (const func of configObject.functionFolders) {
     var flagStr = configObject.flags.join(' ');
     var deployCmd = `gcloud functions deploy ${func} ${flagStr}`;
     process.chdir(func);
-    log.info('Deploying the ' + chalk.green(func) + ' function');
-    log.info(`Executing: ${deployCmd}`);
+    log.info('\nDeploying the ' + chalk.green(func) + ' function');
+    log.info(deployCmd);
     await execa `${deployCmd}`;
     process.chdir('..');
 }

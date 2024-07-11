@@ -173,7 +173,7 @@ log.debug(`Working directory: ${path.join(process.cwd(), path.sep)}`);
 
 // does the config file exist?
 const configFilePath = path.join(process.cwd(), APP_CONFIG_FILE);
-log.info(`Configuration file: ${configFilePath}`);
+log.info(`Configuration path: ${configFilePath}`);
 if (!fs.existsSync(configFilePath)) {
   log.info(chalk.red('\nConfiguration file missing: '));
   log.info('Rather than requiring the use of a bunch of command-line arguments, this tool uses a configuration file instead.');
@@ -201,18 +201,19 @@ if (!fs.existsSync(configFilePath)) {
       {
         type: 'multiselect',
         name: 'folders',
-        message: 'Select one or more function folders to deploy:',
+        message: chalk.green('Select one or more function folders to deploy:'),
         choices: getlocalFolders(),
       }
     ]
     let fileOptions = await prompts(configPrompts);
     if (debugMode) console.dir(fileOptions);
 
+    // Do we really care if it's empty? All this means is that the user didn't select any folders
     // if (fileOptions.folders.length < 1) {
     //   log.error('No folders selected, exiting...');
     //   process.exit(1);
     // }
-    
+
     // populate the config object with the user's selections
     configObject.functionFolders = fileOptions.folders;
     // should we populate the flags array with default values?
@@ -227,13 +228,17 @@ if (!fs.existsSync(configFilePath)) {
 
     // write the file to disk
     if (saveConfigFile(configFilePath, configObject)) {
-      try {
-        await execa('code', [configFilePath]);
-      } catch (err) {
-        log.error(err);
-        process.exit(1);
+      // are we running in VS Code?
+      if (process.env.TERM_PROGRAM == "vscode") {
+        // then open the file in the editor
+        try {
+          await execa('code', [configFilePath]);
+        } catch (err) {
+          log.error(err);
+          process.exit(1);
+        }
+        process.exit(0);
       }
-      process.exit(0);
     }
     process.exit(1);
   } else {
@@ -267,16 +272,12 @@ if (configObject.flags.length < 1) {
 }
 
 for (const func of configObject.functionFolders) {
-  // build a flag list from the flags array
   var flagStr = configObject.flags.join(' ');
-  // execute the function deploy command passing in the flags as options to the command
   var deployCmd = `gcloud functions deploy ${func} ${flagStr}`;
-  // change to the function directory
   process.chdir(func);
-  log.info('Deploying the ' + chalk.green(func) + ' function');
-  log.info(`Executing: ${deployCmd}`);
-  // deploy the function
+  log.info('\nDeploying the ' + chalk.green(func) + ' function');
+  log.info(deployCmd);
+  // TODO: Do some better error processing for the `execa` command below
   await execa`${deployCmd}`;
-  // change back to the project directory
   process.chdir('..');
 }
