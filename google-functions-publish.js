@@ -3,7 +3,7 @@ import fs from 'fs-extra';
 import path from 'path';
 import chalk from 'chalk';
 import boxen from 'boxen';
-import { execa } from 'execa';
+import { execa, ExecaError } from 'execa';
 import prompts from 'prompts';
 import logger from 'cli-logger';
 var log = logger();
@@ -15,6 +15,7 @@ var PropertyType;
     PropertyType[PropertyType["String"] = 3] = "String";
 })(PropertyType || (PropertyType = {}));
 const APP_NAME = 'Publish Google Functions';
+const APP_SHORT_NAME = 'gfpub';
 const APP_AUTHOR = 'by John M. Wargo (https://johnwargo.com)';
 const APP_CONFIG_FILE = 'gfpub.json';
 function compareFunction(a, b) {
@@ -60,16 +61,6 @@ function saveConfigFile(configFilePath, configObject) {
     }
     return result;
 }
-function updateConfigFile(configObject, configFilePath) {
-    log.info('Updating the configuration file');
-    const defaultConfig = buildConfigObject();
-    for (var key in defaultConfig) {
-        if (!configObject[key]) {
-            configObject[key] = defaultConfig[key];
-        }
-    }
-    return saveConfigFile(configFilePath, configObject);
-}
 function directoryExists(filePath) {
     if (fs.existsSync(filePath)) {
         try {
@@ -102,9 +93,8 @@ function getlocalFolders() {
     return choices;
 }
 console.log(chalk.green(boxen(APP_NAME, { padding: 1 })));
-console.log(`${APP_AUTHOR}\n`);
+console.log(`${APP_AUTHOR}`);
 const myArgs = process.argv.slice(2);
-const doConfigUpdate = myArgs.includes('-u');
 const debugMode = myArgs.includes('-d');
 log.level(debugMode ? log.DEBUG : log.INFO);
 log.debug(chalk.green('Debug mode enabled'));
@@ -171,12 +161,6 @@ if (!fs.existsSync(configFilePath)) {
     }
 }
 const configObject = readConfigFile(configFilePath);
-if (doConfigUpdate) {
-    var result = updateConfigFile(configObject, configFilePath);
-    if (result)
-        process.exit(0);
-    process.exit(1);
-}
 if (!isFolderArrayValid('functionFolders', configObject.functionFolders)) {
     log.error("The configuration file's functionFolders array is empty, exiting...");
     process.exit(1);
@@ -189,8 +173,22 @@ for (const func of configObject.functionFolders) {
     var flagStr = configObject.flags.join(' ');
     var deployCmd = `gcloud functions deploy ${func} ${flagStr}`;
     process.chdir(func);
-    log.info('\nDeploying the ' + chalk.green(func) + ' function');
+    log.info(`\n${APP_SHORT_NAME}: Deploying the ${chalk.yellow(func)} function\n`);
     log.info(deployCmd);
-    await execa `${deployCmd}`;
+    try {
+        await execa({ stdout: 'inherit', stderr: 'inherit' }) `${deployCmd}`;
+    }
+    catch (error) {
+        if (error instanceof ExecaError) {
+            log.info(chalk.red('Execa Error:'));
+        }
+        else {
+            log.info(chalk.red('Error:'));
+        }
+        log.info(error);
+        process.exit(1);
+    }
+    log.info(`\n${APP_SHORT_NAME}: ${chalk.yellow(func)} function deployed`);
     process.chdir('..');
 }
+log.info(chalk.green(`\n${APP_SHORT_NAME}: All functions deployed successfully`));
