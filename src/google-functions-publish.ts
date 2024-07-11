@@ -34,12 +34,7 @@ type ConfigObject = {
   flags: string[];
 }
 
-// type Choice = {
-//   title: string;
-//   value: string;
-// }
-
-type PromptSelection = {
+type Choice = {
   title: string;
   value: string;
 }
@@ -144,7 +139,7 @@ function isFolderArrayValid(configValue: string, folders: string[]): boolean {
   return missingFolders.length === 0;
 }
 
-function getlocalFolders(): PromptSelection[] {
+function getlocalFolders(): Choice[] {
   let folders = fs.readdirSync(process.cwd(), { withFileTypes: true });
   let choices = [];
   for (const folder of folders) {

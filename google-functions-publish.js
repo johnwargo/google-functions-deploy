@@ -173,7 +173,7 @@ for (const func of configObject.functionFolders) {
     var flagStr = configObject.flags.join(' ');
     var deployCmd = `gcloud functions deploy ${func} ${flagStr}`;
     process.chdir(func);
-    log.info(`\n${APP_SHORT_NAME}: Deploying the ${chalk.yellow(func)} function\n`);
+    log.info(`\n${APP_SHORT_NAME}: Deploying the ${chalk.yellow(func)} function`);
     log.info(deployCmd);
     try {
         await execa({ stdout: 'inherit', stderr: 'inherit' }) `${deployCmd}`;
