@@ -26,7 +26,13 @@ The module adds a `gfpub` command you can use in any Google Cloud Functions proj
 
 ## Usage
 
+To publish a Google Cloud function or a group of functions, open a terminal window in the Google Cloud Functions project then execute the following command:
 
+``` shell
+gfpub
+```
+
+The module requires a configuration file, so on first run it will offer to create it for you as shown in the following example:
 
 ``` shell
 ┌──────────────────────────────┐
@@ -44,14 +50,43 @@ Once it completes, you can edit the configuration file to change the default val
 
 √ Create configuration file? ... yes
 √ Use default flags? ... yes
-√ Select one or more function folders to deploy: » images, node_modules, src
+√ Select one or more function folders to deploy: » Function1, Function2, Function3
 Writing configuration file D:\dev\node\google-functions-publish\gfpub.json
 Output file written successfully
 
 Open D:\dev\node\google-functions-publish\gfpub.json in an editor to modify configuration settings.
-
-D:\dev\node\google-functions-publish>
 ```
 
+If you run the command in a terminal window inside Visual Studio Code, the module will open the file in the editor after creating the file.
 
-automatically loads config file if running in vscode
+If you want to skip that process and create the file manually, create a file in the project root called `gfpub.json` and populate it with two JSON arrays: `functionFolders` and `flags` as shown in the example below:
+
+```json
+{
+  "functionFolders": [],
+  "flags": []
+}
+```
+
+| Configuration Array | Description |
+| ------------------- | ----------- |
+| `functionFolders`   | |
+| `flags`             | |
+
+
+
+```json
+{
+  "functionFolders": [
+    "Function1",
+    "Function2",
+    "Function3"
+  ],
+  "flags": [
+    "--region=us-east1",
+    "--runtime=nodejs20",
+    "--trigger-http",
+    "--allow-unauthenticated"
+  ]
+}
+```
