@@ -108,7 +108,7 @@ With a populated configuration in place, to deploy all of the functions in a pro
 gfdeploy
 ```
 
-The module will loop through all of the folders in the `functionsFolders` array and execute the deployment command for each while writing all output to the console. 
+At this point, the module loops through all the folders listed in the `functionsFolders` array, and executes the deployment command for each, writing all output to the console as it completes the task. 
 
 ***
 
