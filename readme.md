@@ -96,6 +96,8 @@ Here's an example of a configuration file populated with configuration informati
 }
 ```
 
+**Note:** The options in the `flags` array shown in the previous example are the default flags used when you answer `Yes` to the "Use default flags?" prompt. 
+
 The `gcloud functions deploy` command supports a wide selection of command-line options, refer to the [product documentation](https://cloud.google.com/sdk/gcloud/reference/functions/deploy) for information about all of the available options. Rather than code support for every command-line option, all you have to do is populate the `flags` array with the appropriate settings for your particular project and the module takes care of passing them to the `gcloud` command.
 
 ## Function Deployment
