@@ -4,7 +4,7 @@ A node.js CLI that allows users to deploy multiple Google Cloud functions (in se
 
 ## Background
 
-A while back, I migrated several cloud functions from Netlify to the Google Cloud platform and noticed that the Google Cloud CLI (`gcloud` command) requires that developers issue a separate deployment comment for each function deployment. 
+A while back, I migrated several cloud functions from Netlify to the Google Cloud platform and noticed that the Google Cloud CLI (`gcloud` command) requires that developers issue a separate deployment command for each function deployment. 
 
 My project had three functions and I wanted a way to deploy all three with a single command. In [Google Cloud Multiple Functions in a Project](https://johnwargo.com/posts/2024/google-cloud-multiple-functions/) I added some code to my project that allowed me to easily do this using [Google zx](https://github.com/google/zx) as an execution helper. 
 

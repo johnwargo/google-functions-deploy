@@ -10,7 +10,7 @@ var log = logger();
 const APP_NAME = 'Deploy Google Functions';
 const APP_SHORT_NAME = 'gfdeploy';
 const APP_AUTHOR = 'by John M. Wargo (https://johnwargo.com)';
-const APP_CONFIG_FILE = APP_SHORT_NAME + 'json';
+const APP_CONFIG_FILE = APP_SHORT_NAME + '.json';
 function compareFunction(a, b) {
     if (a.property < b.property) {
         return -1;
