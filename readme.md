@@ -26,6 +26,8 @@ The module adds a `gfpub` command you can use in any Google Cloud Functions proj
 
 ## Usage
 
+## Configuration
+
 To publish a Google Cloud function or a group of functions, open a terminal window in the Google Cloud Functions project then execute the following command:
 
 ``` shell
@@ -69,12 +71,14 @@ You can also skip that process altogether and create the file manually. To do th
 }
 ```
 
+The following table describes each configuration option:
+
 | Configuration Array | Description |
 | ------------------- | ----------- |
 | `functionFolders`   | The array of sub-folders that contain Google Cloud Functions functions. Each folder represents a single function. |
 | `flags`             | The array of `gcloud functions deploy` command-line arguments required to successfully deploy the function to Google's cloud platform. The module will automatically populate the function name in the command. |
 
-
+Here's an example of a configuration file populated with configuration information for three functions (Function1, Function2, and Function3) deployed to `us-east1` using node.js version 20 with an HTTP trigger allowing unauthenticated access:
 
 ```json
 {
@@ -91,4 +95,8 @@ You can also skip that process altogether and create the file manually. To do th
   ]
 }
 ```
+
+The `gcloud functions deploy` command supports a wide selection of command-line options, refer to the [product documentation](https://cloud.google.com/sdk/gcloud/reference/functions/deploy) for information about all of the available options. Rather than code support for every command-line option, all you have to do is populate the `flags` array with the appropriate settings for your particular project and the module takes care of passing them to the `gcloud` command.
+
+## Function Deployment
 
