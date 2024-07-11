@@ -92,8 +92,7 @@ function saveConfigFile(configFilePath: string, configObject: ConfigObject): boo
   var result = true;
   try {
     fs.writeFileSync(path.join('.', configFilePath), outputStr, 'utf8');
-    log.info('Output file written successfully');
-    log.info(`\nOpen ${chalk.yellow(configFilePath)} in an editor to modify configuration settings.`);
+    log.info('Configuration file written successfully');
   } catch (err: any) {
     log.error(`${chalk.red('Error:')} Unable to write to ${APP_CONFIG_FILE}`);
     console.dir(err);
@@ -233,6 +232,8 @@ if (!fs.existsSync(configFilePath)) {
           process.exit(1);
         }
         process.exit(0);
+      } else {
+        log.info(`\nOpen ${chalk.yellow(configFilePath)} in an editor to configure settings for the project.`);
       }
     }
     process.exit(1);

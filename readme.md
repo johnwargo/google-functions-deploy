@@ -51,6 +51,7 @@ Once it completes, you can edit the configuration file to change the default val
 √ Create configuration file? ... yes
 √ Use default flags? ... yes
 √ Select one or more function folders to deploy: » Function1, Function2, Function3
+
 Writing configuration file D:\dev\node\google-functions-publish\gfpub.json
 Output file written successfully
 
@@ -59,7 +60,7 @@ Open D:\dev\node\google-functions-publish\gfpub.json in an editor to modify conf
 
 If you run the command in a terminal window inside Visual Studio Code, the module will open the file in the editor after creating the file.
 
-If you want to skip that process and create the file manually, create a file in the project root called `gfpub.json` and populate it with two JSON arrays: `functionFolders` and `flags` as shown in the example below:
+You can also skip that process altogether and create the file manually. To do that, create a file in the project root called `gfpub.json` and populate it with two JSON arrays: `functionFolders` and `flags` as shown in the example below:
 
 ```json
 {
@@ -70,8 +71,8 @@ If you want to skip that process and create the file manually, create a file in 
 
 | Configuration Array | Description |
 | ------------------- | ----------- |
-| `functionFolders`   | |
-| `flags`             | |
+| `functionFolders`   | The array of sub-folders that contain Google Cloud Functions functions. Each folder represents a single function. |
+| `flags`             | The array of `gcloud functions deploy` command-line arguments required to successfully deploy the function to Google's cloud platform. The module will automatically populate the function name in the command. |
 
 
 
@@ -90,3 +91,4 @@ If you want to skip that process and create the file manually, create a file in 
   ]
 }
 ```
+
