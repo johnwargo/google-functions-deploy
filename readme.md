@@ -36,7 +36,7 @@ gfdeploy
 
 Here's an example of automated configuration console output:
 
-``` shell
+```text
 ┌──────────────────────────────┐
 │                              │
 │   Deploy Google Functions    │
