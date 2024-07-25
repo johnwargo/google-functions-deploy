@@ -1,6 +1,6 @@
 {
   "name": "google-functions-deploy",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Deploys Google Cloud functions from multiple subdirectories.",
   "author": "John M. Wargo",
   "license": "MIT",
