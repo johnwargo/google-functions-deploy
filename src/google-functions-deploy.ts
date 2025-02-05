@@ -89,7 +89,7 @@ function saveConfigFile(configFilePath: string, configObject: ConfigObject): boo
   outputStr = outputStr.replaceAll('//', '/');
   var result = true;
   try {
-    fs.writeFileSync(path.join('.', configFilePath), outputStr, 'utf8');
+    fs.writeFileSync(configFilePath, outputStr, 'utf8');
     log.info('Configuration file written successfully');
   } catch (err: any) {
     log.error(`${chalk.red('Error:')} Unable to write to ${APP_CONFIG_FILE}`);
@@ -212,8 +212,9 @@ if (!fs.existsSync(configFilePath)) {
     if (fileOptions.useDefaultFlags) {
       log.debug('Using default flags');
       // populate some default flags (this is what I use for my functions)
+      configObject.flags.push('--gen2');
       configObject.flags.push('--region=us-east1');
-      configObject.flags.push('--runtime=nodejs20');
+      configObject.flags.push('--runtime=nodejs22');
       configObject.flags.push('--trigger-http');
       configObject.flags.push('--allow-unauthenticated');
     }
@@ -272,7 +273,7 @@ for (const func of configObject.functionFolders) {
   log.info(`\n${APP_SHORT_NAME}: Deploying the ${chalk.yellow(func)} function`);
   log.info(deployCmd);
   try {
-    await execa({stdout: 'inherit', stderr: 'inherit'})`${deployCmd}`;
+    await execa({ stdout: 'inherit', stderr: 'inherit' })`${deployCmd}`;
   } catch (error) {
     if (error instanceof ExecaError) {
       log.info(chalk.red('Execa Error:'));

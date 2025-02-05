@@ -43,7 +43,7 @@ function saveConfigFile(configFilePath, configObject) {
     outputStr = outputStr.replaceAll('//', '/');
     var result = true;
     try {
-        fs.writeFileSync(path.join('.', configFilePath), outputStr, 'utf8');
+        fs.writeFileSync(configFilePath, outputStr, 'utf8');
         log.info('Configuration file written successfully');
     }
     catch (err) {
@@ -128,8 +128,9 @@ if (!fs.existsSync(configFilePath)) {
         configObject.functionFolders = fileOptions.folders;
         if (fileOptions.useDefaultFlags) {
             log.debug('Using default flags');
+            configObject.flags.push('--gen2');
             configObject.flags.push('--region=us-east1');
-            configObject.flags.push('--runtime=nodejs20');
+            configObject.flags.push('--runtime=nodejs22');
             configObject.flags.push('--trigger-http');
             configObject.flags.push('--allow-unauthenticated');
         }
